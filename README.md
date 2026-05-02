@@ -338,10 +338,9 @@ Decisions were made through group discussion, prioritizing feasibility within ti
 | T3 | Sensor connections (Ultrasonic + IR) | Nidhi | 2 | T2 | Done |
 | T4 | Raspberry Pi setup & GPIO | Krishnan | 1.5 | T1 | Done |
 | T5 | Serial communication (Pi ↔ Arduino) | Krishnan | 1.5 | T4 | Done |
-| T6 | LED setup (speed indication) | Dheeraj | 1 | T4 | Done |
-| T7 | System integration | Krishnan + Nidhi | 2 | T3, T5 | Done |
-| T8 | Testing & debugging | All | 1.5 | T7 | Done |
-| T9 | Documentation | Dheeraj | 3 | T8 | Done |
+| T6 | System integration | Krishnan + Nidhi | 2 | T3, T5 | Done |
+| T7 | Testing & debugging | All | 1.5 | T6 | Done |
+| T8  | Documentation | Dheeraj | 3 | T7 | Done |
 
 ## 10.3 Responsibility Split
 
@@ -454,7 +453,7 @@ Right now, the biggest uncertainty is whether the communication between the Rasp
 
 # 15. Build Documentation
 
-## 15.1 Fabrication Process (if any)
+## 15.1 Fabrication Process 
 
 In this project, the robotic car along with components like the DC motors and IR sensors was already mounted and provided as a ready-made setup. So, we did not perform any major fabrication work such as cutting or assembling the base structure.
 
