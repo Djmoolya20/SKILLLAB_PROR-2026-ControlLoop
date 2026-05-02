@@ -23,11 +23,11 @@ ControlLoop
 
 ## 1.3 Project Title
 
-Adaptive Cruise Control Enabled Robotic Car
+Adaptive Cruise Control Enabled Robo Car
 
 ## 1.4 One-Line Pitch
 
-An ACC-enabled robotic car that intelligently adjusts its movement based on real-time obstacle detection and sensor input.
+An ACC enabled robo car that intelligently adjusts its velocity and direction based on real-time obstacle detection and sensor input.
 
 ## 1.5 Expanded Project Idea
 
@@ -46,7 +46,8 @@ List what inspired the project.
 
 | Source Type | Title / Link | What Inspired You |
 | --- | --- | --- |
-| [Video] | https://www.youtube.com/watch?v=IMYi3G7dkU4 | This video helped us understand how Adaptive Cruise Control works in real cars and inspired us to implement a simplified version using sensors in our project. |
+| Video | https://www.youtube.com/watch?v=IMYi3G7dkU4 | This video helped us understand how Adaptive Cruise Control works in real cars and inspired us to implement a simplified version using sensors in our project. |
+| Book | R. K. Jurgen, Adaptive Cruise Control, Warrendale, PA, USA: SAE International, 2006 | This book helped us understand the working principles of adaptive cruise control systems, especially how vehicles maintain safe distance using sensor-based speed adjustments.|
 
 ## 2.2 Original Twist
 
@@ -163,8 +164,6 @@ These sensors continuously provide real-time environmental data to the system.
 
 ## 6.2 Labeled Build Sketch/architecture/flow diagram/algorithm
 
-
-`[Upload image and link here]`
 
 ## 6.3 Approximate Dimensions
 
