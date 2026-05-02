@@ -155,20 +155,15 @@ These sensors continuously provide real-time environmental data to the system.
 
 ## 6.1 Concept Architecture/sketch/schematic
 
-Add an early sketch of the full idea.
 
-**Insert image below:**
-`[Upload image and link here]`
+
+<p align="center">
+<img src="images/Early-sketch.jpeg" width="400">
+</p>
 
 ## 6.2 Labeled Build Sketch/architecture/flow diagram/algorithm
 
-Add a sketch with labels showing:
-- structure,
-- electronics placement,
-- user touch points,
-- moving parts,
-- output elements.
-**Insert image below:**
+
 `[Upload image and link here]`
 
 ## 6.3 Approximate Dimensions
@@ -176,10 +171,10 @@ Add a sketch with labels showing:
 
 | Dimension | Value |
 | --- | --- |
-| Length | 16 cm |
-| Width | 16 cm |
+| Length | 25.5 cm |
+| Width | 15.5 cm |
 | Height | 8 cm |
-| Estimated weight | 400 g |
+| Estimated weight | 800 g |
 
 
 ---
@@ -206,10 +201,9 @@ The Raspberry Pi is connected to the Arduino Uno using a USB cable for serial co
 
 ## 7.3 Circuit Diagram/architecture diagram
 
-Insert a hand-drawn or software-made circuit diagram.
-
-**Insert image below:**
-`[Upload image and link here]`
+<p align="center">
+<img src="images/Circuit-Diagram.jpeg" width="800">
+</p>
 
 ## 7.4 Power Plan
 
@@ -236,36 +230,43 @@ Insert a hand-drawn or software-made circuit diagram.
 
 ## 8.2 Software Logic/Algorithm
 
-**Response:**
+**Startup behavior:** The Raspberry Pi initializes GPIO pins for the touch sensor and LEDs. The Arduino initializes motor control and sensor pins. The system starts in an idle state with motors off.
 
-**Startup behavior:** The Raspberry Pi initializes GPIO pins for sensors, LEDs, and touch input. Arduino initializes motor control pins. The system enters idle state awaiting touch input.
+**Input handling:** The touch sensor is used for control. A single tap toggles between AUTO and MANUAL modes. A long press triggers an emergency stop, immediately stopping the motors and resetting the system to idle.
 
-**Input handling:** Touch sensor tap is detected on Raspberry Pi GPIO. A single tap activates the system; a second tap stops it.
+**Sensor reading:** The Arduino continuously reads data from the ultrasonic sensor (distance) and IR sensors (left and right). This data is sent to the Raspberry Pi through serial communication.
 
-**Sensor reading:** Ultrasonic sensor continuously measures distance to obstacles ahead. IR sensors monitor for immediate close-range danger.
+**Decision logic (AUTO mode):**  
+The Raspberry Pi processes sensor data and decides movement:
+- If left IR detects an obstacle → turn right  
+- If right IR detects an obstacle → turn left  
+- Otherwise, use distance for speed control:  
+  - Far (clear): Full speed, 4 LEDs on  
+  - Medium: Reduced speed, 3 LEDs on  
+  - Close: Slow speed, 2 LEDs on  
+  - Very close: Stop, 1 LED on  
+If the path becomes clear, speed increases gradually.
 
-**Decision logic:** Based on measured distance, the system decides speed level:
+**Manual control (MANUAL mode):**  
+The user controls the car using keyboard inputs:  
+- W → Move forward  
+- S → Move backward  
+- A → Turn left  
+- D → Turn right  
+- X → Stop  
 
-- Far (clear): Full speed, 4 LEDs on 
+**Output behavior:**  
+The Raspberry Pi sends movement commands to the Arduino via serial communication. The Arduino executes motor control using PWM. LEDs connected to the Raspberry Pi indicate the current speed level.
 
-- Medium distance: Reduced speed, 3 LEDs on
+**Communication logic:**  
+The Arduino sends sensor data (IR and distance) to the Raspberry Pi. The Raspberry Pi sends control commands back to the Arduino. Communication is done using Serial (USB).
 
-- Close: Slow speed, 2 LEDs on
-
-- Very close / IR triggered: Full stop, 1 LED on
-
-If an obstacle is removed, speed resumes gradually.
-
-**Output behavior:** Raspberry Pi sends speed/direction commands to Arduino. Arduino drives motors using PWM. LEDs update to reflect current speed level.
-
-**Communication logic:** Raspberry Pi communicates with Arduino via Serial (USB). Commands include speed level and direction.
-
-**Reset behavior:** If the touch sensor is tapped again, all motors stop and LEDs reset. The system re-enters idle state.
-
+**Reset behavior:**  
+A long press on the touch sensor immediately stops the system (emergency stop). A mode toggle or stop command returns the system to the idle state.
 ## 8.3 Code Flowchart
 
 <p align="center">
-<img src="images/Flowchart.png" width="400">
+<img src="images/flowchart.png" width="300">
 </p>
 
 ---
@@ -331,10 +332,17 @@ Decisions were made through group discussion, prioritizing feasibility within ti
 ## 10.2 Task Breakdown
 
 
-| Task ID | Task | Owner | Est. Hours | Deadline | Dependency | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| T1 | Finalize concept | All | 2 | 1st April | None | Done |
-| T2 | [Write here] | [Write here] | [Write here] | [Write here] | [Write here] | [Write here] |
+| Task ID | Task | Owner | Est. Hours | Dependency | Status |
+|--------|------|------|------------|------------|--------|
+| T1 | Finalize concept | All | 2 | None | Done |
+| T2 | Arduino motor setup | Nidhi | 1.5 | T1 | Done |
+| T3 | Sensor connections (Ultrasonic + IR) | Nidhi | 2 | T2 | Done |
+| T4 | Raspberry Pi setup & GPIO | Krishnan | 1.5 | T1 | Done |
+| T5 | Serial communication (Pi ↔ Arduino) | Krishnan | 1.5 | T4 | Done |
+| T6 | LED setup (speed indication) | Dheeraj | 1 | T4 | Done |
+| T7 | System integration | Krishnan + Nidhi | 2 | T3, T5 | Done |
+| T8 | Testing & debugging | All | 1.5 | T7 | Done |
+| T9 | Documentation | Dheeraj | 3 | T8 | Done |
 
 ## 10.3 Responsibility Split
 
@@ -388,14 +396,10 @@ Expected outcomes:
 
 ## 12.2 Update Log
 
-
-| Days | Planned Goal | What Actually Happened | What Changed | Next Steps |
-| --- | --- | --- | --- | --- |
-| Day 1 | [Write here] | [Write here] | [Write here] | [Write here] |
-| Day 2 | [Write here] | [Write here] | [Write here] | [Write here] |
-| Day 3 | [Write here] | [Write here] | [Write here] | [Write here] |
-| Day 4 | [Write here] | [Write here] | [Write here] | [Write here] |
-
+| Day   | Planned Goal | What Actually Happened | What Changed | Next Steps |
+|------|-------------|----------------------|--------------|------------|
+| Day 1 | Complete full system build and basic functionality | Most of the work was completed, including hardware setup (motors, sensors), Arduino programming, Raspberry Pi setup, and initial integration | Added IR-based left/right turning and basic speed control logic during development | Perform testing and fix minor issues |
+| Day 2 | Testing and documentation | Minor debugging was done, system behavior was refined, and documentation (report, flowchart) was completed | Introduced AUTO and MANUAL mode switching and improved explanation clarity | Final review and submission |
 
 ---
 
@@ -432,18 +436,20 @@ Right now, the biggest uncertainty is whether the communication between the Rasp
 
 ## 14.2 Testing and Debugging Log
 
-
-| Date | Problem Found | Type | What You Tried | Result | Next Action |
-| --- | --- | --- | --- | --- | --- |
-| [Write here] | [Write here] | [Write here] | [Write here] | [Write here] | [Write here] |
+| Date  | Problem Found | Type | What You Tried | Result | Next Action |
+|-------|--------------|------|----------------|--------|-------------|
+| Day 1 | Ultrasonic sensor giving inconsistent readings | Technical | Adjusted sensor position and checked wiring | Readings became stable for short range | Fine-tune threshold values |
+| Day 1 | Delay in motor response | Communication | Reduced delay and improved serial timing | Response improved | Monitor during continuous run |
+| Day 1 | IR sensors not triggering correctly | Hardware | Rechecked connections and alignment | Sensors started detecting properly | Test with different obstacles |
+| Day 2 | Serial communication mismatch (data format issue) | Integration | Standardized data format between Arduino and Raspberry Pi | Data parsed correctly | Stress test communication |
 
 ## 14.3 Playtesting Notes
 
 
 | Tester | What They Did | What Confused Them | What They Enjoyed | What You Will Change |
-| --- | --- | --- | --- | --- |
-| [Write here] | [Write here] | [Write here] | [Write here] | [Write here] |
-
+|--------|--------------|--------------------|-------------------|----------------------|
+| Classmate | Tested AUTO and MANUAL modes and used keyboard controls | Took some time to understand that W and S control speed instead of direct movement | Found manual control engaging and liked the quick response of the system | No major changes required |
+| Professor | Observed AUTO mode behavior and asked about system working and communication | Asked for clearer explanation of role of Raspberry Pi and Arduino | Appreciated the concept and implementation of ACC logic using sensors | No major changes required |
 
 ---
 
@@ -468,15 +474,28 @@ During testing, small adjustments were made in wiring and sensor placement to im
 
 Add photos throughout the project.
 
-Suggested images:
-- early sketch,
-- prototype,
+
+- early sketch
+<p align="center">
+<img src="images/Early-sketch.jpeg" width="300">
+</p>
+
+- prototype
 <p align="center">
 <img src="images/RoboCar-prototype.jpg" width="400">
 </p>
-- electronics testing,
-- mechanism test,
-- final build.
+
+- Terminal Output
+<p align="center">
+<img src="images/Electronics-working.jpeg" width="400">
+</p>
+
+
+- final build
+ <p align="center">
+<img src="images/final-build.jpeg" width="400">
+</p>
+
 
 
 ---
@@ -485,22 +504,27 @@ Suggested images:
 
 ## 17.1 Final Description
 
-**Response:**
-`[Write here]`
+This project is a simplified Adaptive Cruise Control (ACC) robotic car built to demonstrate how modern vehicles adjust their speed and movement based on surrounding conditions. The system uses an Arduino and a Raspberry Pi working together, where the Arduino handles sensor reading and motor control, and the Raspberry Pi makes decisions based on the data received.
+
+The car uses an ultrasonic sensor to measure the distance from obstacles ahead and IR sensors to detect obstacles on the left and right sides. Based on this input, the system automatically adjusts the speed of the car—moving faster when the path is clear and slowing down or stopping when an obstacle is detected. In addition, the IR sensors enable basic directional control: if an obstacle is detected on one side, the car moves in the opposite direction to avoid it. 
+
+The project also includes a manual control mode, where the car can be controlled using keyboard inputs (W, A, S, D), similar to a game. A touch sensor is used to switch between automatic and manual modes, and a long press acts as an emergency stop.
+
+Overall, the project demonstrates how sensor data, real-time decision-making, and motor control can be integrated to create an intelligent and responsive system, giving a basic understanding of how real-world adaptive cruise control systems work.
 
 ## 17.2 What Works Well
 
-`[Write here]`
+The system is able to detect obstacles and adjust its speed in real time, making the movement smooth and responsive. The integration between the Raspberry Pi and Arduino works reliably for communication and control. The IR sensors help in quick directional correction—if an obstacle is detected on one side, the car moves in the opposite direction, improving navigation. The touch sensor makes it easy to switch modes and trigger an emergency stop. 
 
 ## 17.3 What Still Needs Improvement
 
-`[Write here]`
+The system can be further improved by implementing a fully automatic ACC system instead of the current semi-controlled behavior. The turning mechanism can also be made more precise by improving the differential control of the motors, which would result in smoother and more accurate movement.
+
+In addition, power management can be enhanced to ensure stable and consistent motor performance. Advanced features such as camera-based tracking can also be integrated to make the system more intelligent and closer to real-world applications.
 
 ## 17.4 What Changed From the Original Plan
 
-**Response:**
-`[Write here]`
-
+The main changes from the original plan were the addition of left and right turning based on IR sensor input and the introduction of switching between automatic and manual modes. Initially, the system was intended to only adjust speed based on obstacle distance, but during development, directional control using IR sensors was added to improve obstacle avoidance. The ability to toggle between auto and manual modes was also introduced later, even though it was not part of the initial plan, as it made the system more interactive and flexible.
 
 ---
 
@@ -512,12 +536,6 @@ The team worked well under the limited time we had. Since it was an 8-hour build
 
 ## 18.2 Technical Reflection
 
-What did you learn about:
-- electronics,
-- coding,
-- mechanisms,
-- fabrication,
-- integration?
 We learned a lot about how different parts of a system come together. On the electronics side, we understood how to connect sensors, motors, and controllers properly and the importance of stable wiring and power. In coding, we worked on writing logic that reacts to real-time sensor data and controls the system accordingly.
 
 From a mechanism point of view, we saw how motor speed directly affects the movement and behavior of the car. There wasn’t much fabrication involved since the base was ready, but we did work on proper placement and connections of components.
@@ -526,15 +544,8 @@ The most important learning was integration—getting Raspberry Pi and Arduino t
 
 ## 18.3 Design Reflection
 
-What did you learn about:
-- designing,
-- delight,
-- clarity,
-- physical interaction,
-- understanding,
-- iteration?
-
 We learned that keeping the design simple and clear makes the system much easier to understand. The LED indicators helped in giving instant feedback, so it was easy to see what the car was doing at any moment. Adding gradual speed changes instead of just stopping made the behavior feel more realistic and interesting.
+
 
 From a physical interaction point of view, using a touch sensor made the system easy to control without any complex input. During testing, we understood that small changes like adjusting sensor placement or tuning values can improve performance a lot. Overall, the process showed us that good design comes from simple ideas, clear feedback, and continuous small improvements.
 
@@ -544,20 +555,20 @@ From a physical interaction point of view, using a touch sensor made the system 
 # 19. Final Submission Checklist
 
 Before submission, confirm that:
-- [ ] Team details are complete
-- [ ] Project description is complete
-- [ ] Inspiration sources are included
-- [ ] Sketches are added
-- [ ] BOM is complete
-- [ ] Purchase list is complete
-- [ ] Budget summary is complete
-- [ ] Mechanical planning is documented if applicable
+- [x] Team details are complete
+- [x] Project description is complete
+- [x] Inspiration sources are included
+- [x] Sketches are added
+- [x] BOM is complete
+- [x] Purchase list is complete
+- [x] Budget summary is complete
+- [x] Mechanical planning is documented if applicable
 - [ ] App planning is documented if applicable
-- [ ] Code flowchart is added
-- [ ] Task breakdown is complete
-- [ ] Weekly logs are updated
-- [ ] Risk register is complete
-- [ ] Testing log is updated
-- [ ] Playtesting notes are included
-- [ ] Build photos are included
-- [ ] Final reflection is written
+- [x] Code flowchart is added
+- [x] Task breakdown is complete
+- [x] Weekly logs are updated
+- [x] Risk register is complete
+- [x] Testing log is updated
+- [x] Playtesting notes are included
+- [x] Build photos are included
+- [x] Final reflection is written
